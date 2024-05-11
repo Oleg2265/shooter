@@ -75,3 +75,7 @@ class Enemy:
         if self.hitbox.y > 500:
             self.hitbox.x = random.randint(0,700)
             self.hitbox.y = random.randint(0,10)
+
+    def defeat(self):
+        self.hitbox.x = random.randint(0, 700)
+        self.hitbox.y = random.randint(0, 10)

@@ -1,3 +1,4 @@
+import json
 import sys
 
 import pygame
@@ -7,7 +8,7 @@ from Character import *
 from Every_enemy import *
 
 def my_mega_game():
-
+    global settings
     window = pygame.display.set_mode((700, 500))
     fps = pygame.time.Clock()
 
@@ -17,11 +18,26 @@ def my_mega_game():
     pygame.mixer.music.load("space.ogg")
     pygame.mixer.music.play(-1)
 
+    def read_data():
+        global settings
+        try:
+            with open("settings.json", "r", encoding="utf-8") as file:
+                settings = json.load(file)
+        except:
+            settings = {
+                "skin": "img.png",
+                "money": 0,
+                "player_skin": "img.png"
+            }
+
+    def write_data():
+        global settings
+        with open("settings.json", "w", encoding="utf-8") as file:
+            json.dump(settings, file, indent=4)
+    read_data()
 
 
-
-
-    abc =Player(100, 100, 50, 50, "rocket.png", 6)
+    abc =Player(100, 100, 50, 50, settings["player_skin"], 6)
     background = pygame.transform.scale(image.load("galaxy.jpg"), (700, 500))
 
 
@@ -40,7 +56,9 @@ def my_mega_game():
         for bullet in abc.bullets:
             for enemy in enemies:
                 if bullet.hitbox.colliderect(enemy.hitbox):
-                    enemy.move()
+                    settings["money"] += 1
+                    write_data()
+                    enemy.defeat()
 
 
         for enemy in enemies:
